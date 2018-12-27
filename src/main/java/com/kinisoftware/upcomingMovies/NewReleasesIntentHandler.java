@@ -91,6 +91,8 @@ public class NewReleasesIntentHandler implements RequestHandler {
 
 	private String getMonthFormatStyle(String releaseDate) {
 		LocalDate localDate = LocalDate.parse(releaseDate);
-		return localDate.getYear() + "-" + localDate.getMonthValue();
+		return localDate.getMonthValue() < 10
+				? localDate.getYear() + "-0" + localDate.getMonthValue()
+				: localDate.getYear() + "-" + localDate.getMonthValue();
 	}
 }
