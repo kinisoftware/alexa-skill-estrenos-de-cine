@@ -1,0 +1,10 @@
+.idea/
+.DS_Store
+atlassian-ide-plugin.xml
+target/
+build/
+lib/
+*.iml
+.classpath
+.project
+.settings
