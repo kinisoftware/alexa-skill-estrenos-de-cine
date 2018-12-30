@@ -66,7 +66,9 @@ public class NewReleasesIntentHandler implements RequestHandler {
 				.collect(Collectors.toList());
 
 		String text;
-		if (movies.isEmpty()) {
+		if (dateValue == null) {
+			text = "Lo siento, no he entendido la fecha que quieres consultar";
+		} else if (movies.isEmpty()) {
 			text = "Lo siento, aún no tengo estrenos para esa fecha";
 		} else {
 			text = "Las películas que se estrenan son: ".concat(String.join(", ", movies));
