@@ -6,7 +6,7 @@ import com.amazon.ask.Skills;
 
 public class UpcomingMoviesStreamHandler extends SkillStreamHandler {
 
-	static final String CARD_TITLE = "Upcoming Movies";
+	static final String CARD_TITLE = "Estrenos de cine";
 
 	public UpcomingMoviesStreamHandler() {
 		super(getSkill());
@@ -18,7 +18,8 @@ public class UpcomingMoviesStreamHandler extends SkillStreamHandler {
 						new LaunchRequestHandler(),
 						new HelpIntentHandler(),
 						new CancelAndStopIntentHandler(),
-						new NewReleasesIntentHandler()
+						new NewReleasesIntentHandler(),
+						new RepeatNewReleasesDateIntentHandler()
 				).build();
 	}
 }

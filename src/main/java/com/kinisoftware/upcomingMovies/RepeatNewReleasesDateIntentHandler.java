@@ -23,11 +23,11 @@ import com.amazon.ask.request.Predicates;
 import com.amazon.ask.response.ResponseBuilder;
 import com.kinisoftware.upcomingMovies.model.NewRelease;
 
-public class NewReleasesIntentHandler implements RequestHandler {
+public class RepeatNewReleasesDateIntentHandler implements RequestHandler {
 
 	@Override
 	public boolean canHandle(HandlerInput input) {
-		return input.matches(Predicates.intentName("NewReleasesIntent"));
+		return input.matches(Predicates.intentName("RepeatNewReleasesDateIntent"));
 	}
 
 	@Override
