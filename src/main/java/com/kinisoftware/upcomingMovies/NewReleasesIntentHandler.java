@@ -52,6 +52,8 @@ public class NewReleasesIntentHandler implements RequestHandler {
 		newReleases.add(new NewRelease("El regreso de Mary Poppins", "2018-12-21"));
 		newReleases.add(new NewRelease("Bumblebee", "2018-12-28"));
 		newReleases.add(new NewRelease("Tiempo después", "2018-12-28"));
+		newReleases.add(new NewRelease("Como  la vida misma", "2019-01-04"));
+		newReleases.add(new NewRelease("Mi vecino Totoro", "2019-01-04"));
 		newReleases.add(new NewRelease("El gran baño", "2019-01-11"));
 		newReleases.add(new NewRelease("Glass", "2019-01-18"));
 		newReleases.add(new NewRelease("X-Men: Fénix Oscura", "2019-02-05"));
