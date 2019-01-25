@@ -1,8 +1,7 @@
-package com.kinisoftware.upcomingMovies;
+package com.kinisoftware.upcomingMovies.handler;
 
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,6 +20,7 @@ import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 import com.amazon.ask.request.Predicates;
 import com.amazon.ask.response.ResponseBuilder;
+import com.kinisoftware.upcomingMovies.ReleasesGetter;
 import com.kinisoftware.upcomingMovies.model.NewRelease;
 
 public class NewReleasesIntentHandler implements RequestHandler {
@@ -41,35 +41,12 @@ public class NewReleasesIntentHandler implements RequestHandler {
 		String dateValue = releasesDate.getValue();
 		System.out.println("Slot value:" + dateValue);
 
-		List<NewRelease> newReleases = new ArrayList<>();
-		newReleases.add(new NewRelease("Rompe Ralph", "2018-12-06"));
-		newReleases.add(new NewRelease("Robin Hood", "2018-12-06"));
-		newReleases.add(new NewRelease("Kursk", "2018-12-06"));
-		newReleases.add(new NewRelease("El regreso de Ben", "2018-12-06"));
-		newReleases.add(new NewRelease("Mortal Engines", "2018-12-14"));
-		newReleases.add(new NewRelease("Miamor perdido", "2018-12-14"));
-		newReleases.add(new NewRelease("Yuli", "2018-12-14"));
-		newReleases.add(new NewRelease("Aquaman", "2018-12-21"));
-		newReleases.add(new NewRelease("El regreso de Mary Poppins", "2018-12-21"));
-		newReleases.add(new NewRelease("Bumblebee", "2018-12-28"));
-		newReleases.add(new NewRelease("Tiempo después", "2018-12-28"));
-		newReleases.add(new NewRelease("El gran baño", "2019-01-11"));
-		newReleases.add(new NewRelease("Glass", "2019-01-18"));
-		newReleases.add(new NewRelease("X-Men: Fénix Oscura", "2019-02-05"));
-		newReleases.add(new NewRelease("Alita: Ángel de combate", "2019-02-15"));
-		newReleases.add(new NewRelease("Cómo entrenar a tu dragón 3", "2019-02-22"));
-		newReleases.add(new NewRelease("Capitana Marvel", "2019-03-08"));
-
-		String text;
-		String repromptText;
-		ResponseBuilder responseBuilder = input.getResponseBuilder();
+		String text = null;
+		String reprompText = null;
 		if (dateValue == null) {
-			text = "Lo siento, no he entendido la fecha que quieres consultar. ¿Puedes repetir para qué fecha quieres " +
-					"conocer los estrenos, por favor? (De esta semana, para este mes, etc)";
-			repromptText = "¿Dime la fecha para la cuál quieres conocer los estrenos, por favor?";
-			responseBuilder = responseBuilder.withReprompt(repromptText);
+			reprompText = "Lo siento, no he entendido la fecha que quieres consultar. ¿Podrías repetir, por favor?";
 		} else {
-			List<String> movies = newReleases
+			List<String> movies = ReleasesGetter.get()
 					.parallelStream()
 					.filter(isReleasedOnDate(dateValue))
 					.map(NewRelease::getTitle)
@@ -83,10 +60,12 @@ public class NewReleasesIntentHandler implements RequestHandler {
 		}
 		System.out.println("Output:" + text);
 
-		return responseBuilder
-				.withSpeech(text)
-				.withSimpleCard(CARD_TITLE, text)
-				.build();
+		ResponseBuilder responseBuilder = input.getResponseBuilder().withSpeech(text).withSimpleCard(CARD_TITLE, text);
+		if (reprompText != null) {
+			responseBuilder.withReprompt(reprompText);
+		}
+
+		return responseBuilder.build();
 	}
 
 	private Predicate<NewRelease> isReleasedOnDate(String dateValue) {

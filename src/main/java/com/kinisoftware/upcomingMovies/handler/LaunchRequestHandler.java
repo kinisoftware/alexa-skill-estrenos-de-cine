@@ -1,4 +1,4 @@
-package com.kinisoftware.upcomingMovies;
+package com.kinisoftware.upcomingMovies.handler;
 
 import java.util.Optional;
 
@@ -19,11 +19,12 @@ public class LaunchRequestHandler implements RequestHandler {
 
 	@Override
 	public Optional<Response> handle(HandlerInput input) {
+		String repromptText = "Pregúntame por los estrenos de cine de esta semana, de la próxima semana o de este mes";
 		String text = "Bienvenido a Estrenos de Cine! Pregúntame por los estrenos de cine de esta semana";
 		return input.getResponseBuilder()
 				.withSpeech(text)
 				.withSimpleCard(CARD_TITLE, text)
-				.withReprompt(text)
+				.withReprompt(repromptText)
 				.build();
 	}
 }
