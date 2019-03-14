@@ -41,31 +41,25 @@ public class NewReleasesIntentHandler implements RequestHandler {
 		String dateValue = releasesDate.getValue();
 		System.out.println("Slot value:" + dateValue);
 
-		String text = null;
-		String reprompText = null;
-		if (dateValue == null) {
-			reprompText = "Lo siento, no he entendido la fecha que quieres consultar. ¿Podrías repetir, por favor?";
-		} else {
-			List<String> movies = ReleasesGetter.get()
-					.parallelStream()
-					.filter(isReleasedOnDate(dateValue))
-					.map(NewRelease::getTitle)
-					.collect(Collectors.toList());
+		String text;
+		List<String> movies = ReleasesGetter.get()
+				.parallelStream()
+				.filter(isReleasedOnDate(dateValue))
+				.map(NewRelease::getTitle)
+				.collect(Collectors.toList());
 
-			if (movies.isEmpty()) {
-				text = "Lo siento, aún no tengo estrenos para esa fecha";
-			} else {
-				text = "Las películas que se estrenan son: ".concat(String.join(", ", movies));
-			}
+		if (movies.isEmpty()) {
+			text = "Lo siento, aún no tengo estrenos para esa fecha";
+		} else {
+			text = "Las películas que se estrenan son: ".concat(String.join(", ", movies));
 		}
 		System.out.println("Output:" + text);
 
-		ResponseBuilder responseBuilder = input.getResponseBuilder().withSpeech(text).withSimpleCard(CARD_TITLE, text);
-		if (reprompText != null) {
-			responseBuilder.withReprompt(reprompText);
-		}
-
-		return responseBuilder.build();
+		return input.getResponseBuilder()
+				.withSpeech(text)
+				.withSimpleCard(CARD_TITLE, text)
+				.withShouldEndSession(true)
+				.build();
 	}
 
 	private Predicate<NewRelease> isReleasedOnDate(String dateValue) {
