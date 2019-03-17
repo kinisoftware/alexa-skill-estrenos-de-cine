@@ -1,11 +1,11 @@
-package com.kinisoftware.upcomingMovies.handler
+package com.kinisoftware.upcomingMovies
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput
 import com.amazon.ask.dispatcher.request.handler.RequestHandler
 import com.amazon.ask.model.LaunchRequest
 import com.amazon.ask.model.Response
 import com.amazon.ask.request.Predicates
-import com.kinisoftware.upcomingMovies.UpcomingMoviesStreamHandler.Companion.CARD_TITLE
+import com.kinisoftware.upcomingMovies.UpcomingMoviesSkill.Companion.CARD_TITLE
 import java.util.*
 
 class LaunchRequestHandler : RequestHandler {

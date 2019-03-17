@@ -1,24 +1,25 @@
-package com.kinisoftware.upcomingMovies.handler
+package com.kinisoftware.upcomingMovies
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput
-import com.amazon.ask.dispatcher.request.handler.RequestHandler
 import com.amazon.ask.model.IntentRequest
 import com.amazon.ask.model.Response
-import com.amazon.ask.request.Predicates
-import com.kinisoftware.upcomingMovies.ReleasesGetter
-import com.kinisoftware.upcomingMovies.UpcomingMoviesStreamHandler.Companion.CARD_TITLE
 import com.kinisoftware.upcomingMovies.model.NewRelease
+import io.micronaut.function.aws.alexa.AlexaIntents
+import io.micronaut.function.aws.alexa.annotation.IntentHandler
 import java.time.LocalDate
 import java.time.temporal.WeekFields
 import java.util.*
+import javax.inject.Singleton
 
-class NewReleasesIntentHandler(private val releasesGetter: ReleasesGetter) : RequestHandler {
+@Singleton
+class UpcomingMoviesSkill(val releasesGetter: ReleasesGetter) {
 
-    override fun canHandle(input: HandlerInput): Boolean {
-        return input.matches(Predicates.intentName("NewReleasesIntent"))
+    companion object {
+        const val CARD_TITLE = "Estrenos de cine"
     }
 
-    override fun handle(input: HandlerInput): Optional<Response> {
+    @IntentHandler("NewReleasesIntent")
+    fun handleNewReleasesIntent(input: HandlerInput): Optional<Response> {
         val request = input.requestEnvelope.request
         val intentRequest = request as IntentRequest
         val intent = intentRequest.intent
@@ -36,6 +37,26 @@ class NewReleasesIntentHandler(private val releasesGetter: ReleasesGetter) : Req
         }
         println("Output:$text")
 
+        return input.responseBuilder
+                .withSpeech(text)
+                .withSimpleCard(CARD_TITLE, text)
+                .withShouldEndSession(true)
+                .build()
+    }
+
+    @IntentHandler(AlexaIntents.HELP)
+    fun handleHelpIntent(input: HandlerInput): Optional<Response> {
+        val text = "Pregúntame por los estrenos de cine de esta semana, de la próxima semana o de este mes"
+        return input.responseBuilder
+                .withSpeech(text)
+                .withSimpleCard(CARD_TITLE, text)
+                .withReprompt(text)
+                .build()
+    }
+
+    @IntentHandler(AlexaIntents.CANCEL, AlexaIntents.STOP)
+    fun handleCancelAndStopIntents(input: HandlerInput): Optional<Response> {
+        val text = "Gracias por usar Estrenos de cine"
         return input.responseBuilder
                 .withSpeech(text)
                 .withSimpleCard(CARD_TITLE, text)
