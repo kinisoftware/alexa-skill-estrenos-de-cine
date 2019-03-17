@@ -1,0 +1,60 @@
+import jp.classmethod.aws.gradle.lambda.AWSLambdaMigrateFunctionTask
+
+buildscript {
+	ext.kotlin_version = '1.3.21'
+
+	repositories {
+		mavenCentral()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+		classpath "jp.classmethod.aws:gradle-aws-plugin:0.30"
+	}
+}
+
+version = '3.0'
+group = 'com.kinisoftware.upcomingMovies'
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'jp.classmethod.aws.lambda'
+apply plugin: 'kotlin'
+
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
+dependencies {
+	compile 'com.amazon.alexa:ask-sdk:2.7.2'
+	compile 'log4j:log4j:1.2.17'
+	compile 'org.slf4j:slf4j-api:1.7.10'
+	compile 'com.amazonaws:aws-lambda-java-log4j:1.0.0'
+	implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+	implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+lambda {
+	region = "eu-west-1"
+}
+
+// Task to deploy the code to AWS
+task deploy(type: AWSLambdaMigrateFunctionTask, dependsOn: [shadowJar, test]) {
+	functionName = "upcomingMoviesServer"
+	runtime = com.amazonaws.services.lambda.model.Runtime.Java8
+	role = "arn:aws:iam::${aws.accountId}:role/lambda_basic_execution"
+	zipFile = shadowJar.archivePath
+	handler = "com.kinisoftware.upcomingMovies.UpcomingMoviesStreamHandler"
+	memorySize = 512
+	timeout = 20
+}
