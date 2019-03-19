@@ -3,8 +3,10 @@ package com.kinisoftware.upcomingMovies
 import com.kinisoftware.upcomingMovies.model.NewRelease
 import java.nio.file.Files
 import java.nio.file.Paths
+import javax.inject.Singleton
 import kotlin.streams.toList
 
+@Singleton
 class ReleasesGetter {
 
     private var releases = emptyList<NewRelease>()

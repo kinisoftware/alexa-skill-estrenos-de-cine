@@ -13,7 +13,6 @@ import javax.inject.Singleton
 
 @Singleton
 class UpcomingMoviesSkill(val releasesGetter: ReleasesGetter) {
-
     companion object {
         const val CARD_TITLE = "Estrenos de cine"
     }

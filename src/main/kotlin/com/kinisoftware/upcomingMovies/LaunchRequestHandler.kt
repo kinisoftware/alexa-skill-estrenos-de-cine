@@ -7,7 +7,9 @@ import com.amazon.ask.model.Response
 import com.amazon.ask.request.Predicates
 import com.kinisoftware.upcomingMovies.UpcomingMoviesSkill.Companion.CARD_TITLE
 import java.util.*
+import javax.inject.Singleton
 
+@Singleton
 class LaunchRequestHandler : RequestHandler {
 
     override fun canHandle(input: HandlerInput): Boolean {
