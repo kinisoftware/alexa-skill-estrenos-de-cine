@@ -6,16 +6,21 @@ import com.kinisoftware.upcomingMovies.handler.CancelAndStopIntentHandler
 import com.kinisoftware.upcomingMovies.handler.HelpIntentHandler
 import com.kinisoftware.upcomingMovies.handler.LaunchRequestHandler
 import com.kinisoftware.upcomingMovies.handler.NewReleasesIntentHandler
+import com.kinisoftware.upcomingMovies.handler.NoIntentHandler
+import com.kinisoftware.upcomingMovies.handler.YesIntentHandler
 
 class UpcomingMoviesStreamHandler : SkillStreamHandler(skill) {
     companion object {
-        const val CARD_TITLE = "Estrenos de cine"
-
-        private val skill = Skills.standard().addRequestHandlers(
-                LaunchRequestHandler(),
-                HelpIntentHandler(),
-                CancelAndStopIntentHandler(),
-                NewReleasesIntentHandler(ReleasesGetter())
-        ).build()
+        private val skill = Skills.standard()
+                //.addRequestInterceptor(LogRequestInterceptor())
+                //.addResponseInterceptor(LogResponseInterceptor())
+                .addRequestHandlers(
+                        LaunchRequestHandler(),
+                        HelpIntentHandler(),
+                        CancelAndStopIntentHandler(),
+                        NewReleasesIntentHandler(MoviesGetter()),
+                        YesIntentHandler(MoviesGetter()),
+                        NoIntentHandler()
+                ).build()
     }
 }

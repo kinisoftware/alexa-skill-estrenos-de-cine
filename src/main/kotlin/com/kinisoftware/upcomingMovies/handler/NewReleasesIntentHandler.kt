@@ -5,14 +5,14 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler
 import com.amazon.ask.model.IntentRequest
 import com.amazon.ask.model.Response
 import com.amazon.ask.request.Predicates
-import com.kinisoftware.upcomingMovies.ReleasesGetter
-import com.kinisoftware.upcomingMovies.UpcomingMoviesStreamHandler.Companion.CARD_TITLE
-import com.kinisoftware.upcomingMovies.model.Upcoming
+import com.kinisoftware.upcomingMovies.MoviesGetter
+import com.kinisoftware.upcomingMovies.model.Movie
 import java.time.LocalDate
 import java.time.temporal.WeekFields
-import java.util.*
+import java.util.Locale
+import java.util.Optional
 
-class NewReleasesIntentHandler(private val releasesGetter: ReleasesGetter) : RequestHandler {
+class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : RequestHandler {
 
     override fun canHandle(input: HandlerInput): Boolean {
         return input.matches(Predicates.intentName("NewReleasesIntent"))
@@ -26,24 +26,25 @@ class NewReleasesIntentHandler(private val releasesGetter: ReleasesGetter) : Req
 
         val releasesDate = slots["releasesDate"]!!
         val dateValue = releasesDate.value
-        println("Slot value:$dateValue")
 
-        val movies = releasesGetter.get().filter { it.isReleasedOnDate(dateValue) }.map { it.title }
-        val text = if (movies.isEmpty()) {
-            "Lo siento, aún no tengo estrenos para esa fecha"
+        val movies = moviesGetter.getUpcomings(dateValue)
+        return if (movies.isBlank()) {
+            val text = "Lo siento, aún no tengo estrenos para esa fecha."
+            val reprompt = " ¿Te gustaría conocer la cartelera actual?"
+            input.responseBuilder
+                    .withSpeech(text + reprompt)
+                    .withReprompt(reprompt)
+                    .build()
         } else {
-            "Las películas que se estrenan son: " + movies.joinToString(", ")
+            val text = "Las películas que se estrenan son: $movies"
+            input.responseBuilder
+                    .withSpeech(text)
+                    .withShouldEndSession(true)
+                    .build()
         }
-        println("Output:$text")
-
-        return input.responseBuilder
-                .withSpeech(text)
-                .withSimpleCard(CARD_TITLE, text)
-                .withShouldEndSession(true)
-                .build()
     }
 
-    private fun Upcoming.isReleasedOnDate(dateValue: String) =
+    private fun Movie.isReleasedOnDate(dateValue: String) =
             getWeekFormatStyle(releaseDate) == dateValue || getMonthFormatStyle(releaseDate) == dateValue
 
     private fun getWeekFormatStyle(releaseDate: String): String {
