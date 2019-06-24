@@ -4,8 +4,8 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput
 import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor
 import com.google.gson.Gson
 
-class LogRequestInterceptor : RequestInterceptor {
+class LogRequestInterceptor(private val gson: Gson) : RequestInterceptor {
     override fun process(input: HandlerInput) {
-        println("Request: ${Gson().toJson(input)}")
+        println("Request: ${gson.toJson(input)}")
     }
 }

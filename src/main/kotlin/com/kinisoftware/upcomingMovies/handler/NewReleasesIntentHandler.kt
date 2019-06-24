@@ -6,10 +6,6 @@ import com.amazon.ask.model.IntentRequest
 import com.amazon.ask.model.Response
 import com.amazon.ask.request.Predicates
 import com.kinisoftware.upcomingMovies.MoviesGetter
-import com.kinisoftware.upcomingMovies.model.Movie
-import java.time.LocalDate
-import java.time.temporal.WeekFields
-import java.util.Locale
 import java.util.Optional
 
 class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : RequestHandler {
@@ -42,22 +38,5 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
                     .withShouldEndSession(true)
                     .build()
         }
-    }
-
-    private fun Movie.isReleasedOnDate(dateValue: String) =
-            getWeekFormatStyle(releaseDate) == dateValue || getMonthFormatStyle(releaseDate) == dateValue
-
-    private fun getWeekFormatStyle(releaseDate: String): String {
-        val localDate = LocalDate.parse(releaseDate)
-        val weekFields = WeekFields.of(Locale.getDefault())
-        return localDate.year.toString() + "-W" + localDate.get(weekFields.weekOfWeekBasedYear())
-    }
-
-    private fun getMonthFormatStyle(releaseDate: String): String {
-        val localDate = LocalDate.parse(releaseDate)
-        return if (localDate.monthValue < 10)
-            localDate.year.toString() + "-0" + localDate.monthValue
-        else
-            localDate.year.toString() + "-" + localDate.monthValue
     }
 }

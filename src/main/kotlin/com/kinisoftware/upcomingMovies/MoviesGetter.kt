@@ -1,17 +1,36 @@
 package com.kinisoftware.upcomingMovies
 
+import com.google.gson.Gson
 import com.kinisoftware.upcomingMovies.api.TheMovieDBService
 import com.kinisoftware.upcomingMovies.model.Movie
 import java.time.LocalDate
 import java.time.temporal.WeekFields
 import java.util.Locale
 
-class MoviesGetter {
+class MoviesGetter(gson: Gson) {
 
-    fun getUpcomings(releaseDate: String) = TheMovieDBService().getUpcomings()
-            .filter { it.isReleasedOnDate(releaseDate) }.map { it.title }.getResponse()
+    private val theMovieDBService = TheMovieDBService(gson)
 
-    fun getNowPlayingMovies() = TheMovieDBService().getNowPlayingMovies().map { it.title }.getResponse()
+    fun getUpcomings(releaseDate: String) = theMovieDBService.getUpcomings()
+            .filter { it.isReleasedOnDate(releaseDate) }.map { it.getTitle() }.getResponse()
+
+    fun getNowPlayingMovies() = theMovieDBService.getNowPlayingMovies().map { it.getTitle() }.getResponse()
+
+    private fun Movie.getTitle() =
+            when {
+                originalTitle == title && originalLanguage != "es" -> {
+                    val lang = ssmlLangByMovieOriginalLanguage[originalLanguage]
+                    when {
+                        lang != null && lang.isNotBlank() -> "<lang xml:lang=$lang>$originalTitle</lang>"
+                        else -> {
+                            println("Unhandled original language $originalLanguage")
+                            title
+                        }
+                    }
+
+                }
+                else -> title
+            }
 
     private fun List<String>.getResponse() =
             when {
@@ -34,5 +53,12 @@ class MoviesGetter {
             localDate.year.toString() + "-0" + localDate.monthValue
         else
             localDate.year.toString() + "-" + localDate.monthValue
+    }
+
+    companion object {
+        private val ssmlLangByMovieOriginalLanguage = mapOf(
+                "en" to "\"en-US\"",
+                "fr" to "\"fr-FR\""
+        )
     }
 }

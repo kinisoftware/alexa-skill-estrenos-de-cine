@@ -6,8 +6,8 @@ import com.amazon.ask.model.Response
 import com.google.gson.Gson
 import java.util.Optional
 
-class LogResponseInterceptor : ResponseInterceptor {
+class LogResponseInterceptor(private val gson: Gson) : ResponseInterceptor {
     override fun process(input: HandlerInput, response: Optional<Response>) {
-        response.ifPresent { println("Response: ${Gson().toJson(it)}") }
+        response.ifPresent { println("Response: ${gson.toJson(it)}") }
     }
 }
