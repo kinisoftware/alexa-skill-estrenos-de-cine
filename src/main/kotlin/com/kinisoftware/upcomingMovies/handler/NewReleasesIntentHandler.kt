@@ -5,8 +5,10 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler
 import com.amazon.ask.model.IntentRequest
 import com.amazon.ask.model.Response
 import com.amazon.ask.request.Predicates
+import com.kinisoftware.upcomingMovies.DirectiveServiceHandler
 import com.kinisoftware.upcomingMovies.MoviesGetter
 import java.util.Optional
+
 
 class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : RequestHandler {
 
@@ -19,13 +21,14 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
         val intentRequest = request as IntentRequest
         val intent = intentRequest.intent
         val slots = intent.slots
-
         val releasesDate = slots["releasesDate"]!!
         val dateValue = releasesDate.value
 
+        DirectiveServiceHandler(input).onRequestingUpcomings()
         val movies = moviesGetter.getUpcomings(dateValue)
+
         return if (movies.isBlank()) {
-            val text = "Lo siento, aún no tengo estrenos para esa fecha."
+            val text = "Lo siento, no tengo estrenos para esa fecha."
             val reprompt = " ¿Te gustaría conocer la cartelera actual?"
             input.responseBuilder
                     .withSpeech(text + reprompt)

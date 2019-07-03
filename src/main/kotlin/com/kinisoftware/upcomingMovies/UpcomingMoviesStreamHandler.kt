@@ -22,9 +22,9 @@ class UpcomingMoviesStreamHandler : SkillStreamHandler(skill) {
 
         private val moviesGetter = MoviesGetter(gson)
 
-        private val skill = Skills.custom()
-                .addRequestInterceptor(LogRequestInterceptor(gson))
-                .addResponseInterceptor(LogResponseInterceptor(gson))
+        private val skill = Skills.standard()
+                .addRequestInterceptor(LogRequestInterceptor())
+                .addResponseInterceptor(LogResponseInterceptor())
                 .addRequestHandlers(
                         LaunchRequestHandler(),
                         HelpIntentHandler(),
