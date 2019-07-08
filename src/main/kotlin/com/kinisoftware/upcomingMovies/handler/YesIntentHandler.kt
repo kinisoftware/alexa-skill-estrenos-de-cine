@@ -2,6 +2,7 @@ package com.kinisoftware.upcomingMovies.handler
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput
 import com.amazon.ask.dispatcher.request.handler.RequestHandler
+import com.amazon.ask.model.IntentRequest
 import com.amazon.ask.model.Response
 import com.amazon.ask.request.Predicates
 import com.kinisoftware.upcomingMovies.DirectiveServiceHandler
@@ -16,7 +17,9 @@ class YesIntentHandler(private val moviesGetter: MoviesGetter) : RequestHandler 
 
     override fun handle(input: HandlerInput): Optional<Response> {
         DirectiveServiceHandler(input).onRequestingNowPlayingMovies()
-        val movies = moviesGetter.getNowPlayingMovies()
+        val request = input.requestEnvelope.request
+        val intentRequest = request as IntentRequest
+        val movies = moviesGetter.getNowPlayingMovies(intentRequest.locale)
         val text = if (movies.isBlank()) {
             "Lo siento, no he podido consultar la cartelera actual."
         } else {

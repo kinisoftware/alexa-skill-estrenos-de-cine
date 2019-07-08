@@ -25,7 +25,7 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
         val dateValue = releasesDate.value
 
         DirectiveServiceHandler(input).onRequestingUpcomings()
-        val movies = moviesGetter.getUpcomings(dateValue)
+        val movies = moviesGetter.getUpcomings(intentRequest.locale, dateValue)
 
         return if (movies.isBlank()) {
             val text = "Lo siento, no tengo estrenos para esa fecha."

@@ -11,10 +11,14 @@ class MoviesGetter(gson: Gson) {
 
     private val theMovieDBService = TheMovieDBService(gson)
 
-    fun getUpcomings(releaseDate: String) = theMovieDBService.getUpcomings()
-            .filter { it.isReleasedOnDate(releaseDate) }.map { it.getTitle() }.getResponse()
+    fun getUpcomings(locale: String, releaseDate: String) = theMovieDBService.getUpcomings(locale)
+            .filter { it.isReleasedOnDate(releaseDate) }
+            .map { it.getTitle() }
+            .getResponse()
 
-    fun getNowPlayingMovies() = theMovieDBService.getNowPlayingMovies().map { it.getTitle() }.getResponse()
+    fun getNowPlayingMovies(locale: String) = theMovieDBService.getNowPlayingMovies(locale)
+            .map { it.getTitle() }
+            .getResponse()
 
     private fun Movie.getTitle() =
             when {

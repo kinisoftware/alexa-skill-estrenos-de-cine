@@ -15,7 +15,7 @@ class LaunchRequestHandler : RequestHandler {
 
     override fun handle(input: HandlerInput): Optional<Response> {
         val repromptText = "Pregúntame por los estrenos de cine de esta semana, de la próxima semana o de este mes"
-        val text = "Bienvenido a Estrenos de Cine! Pregúntame por los estrenos de cine de esta semana"
+        val text = "¡Bienvenido a Estrenos de Cine! Pregúntame por los estrenos de cine de esta semana"
         return input.responseBuilder
                 .withSpeech(text)
                 .withReprompt(repromptText)

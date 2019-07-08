@@ -13,7 +13,7 @@ class CancelAndStopIntentHandler : RequestHandler {
     }
 
     override fun handle(input: HandlerInput): Optional<Response> {
-        val text = "Gracias por usar Estrenos de cine"
+        val text = "¡Gracias por usar Estrenos de cine!"
         return input.responseBuilder
                 .withSpeech(text)
                 .withShouldEndSession(true)
