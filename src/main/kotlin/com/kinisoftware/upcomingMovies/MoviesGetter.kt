@@ -25,16 +25,18 @@ class MoviesGetter(gson: Gson) {
                 originalTitle == title && originalLanguage != "es" -> {
                     val lang = ssmlLangByMovieOriginalLanguage[originalLanguage]
                     when {
-                        lang != null && lang.isNotBlank() -> "<lang xml:lang=$lang>$originalTitle</lang>"
+                        lang != null && lang.isNotBlank() -> "<lang xml:lang=$lang>${originalTitle.sanitaze()}</lang>"
                         else -> {
                             println("Unhandled original language $originalLanguage")
-                            title
+                            title.sanitaze()
                         }
                     }
 
                 }
-                else -> title
+                else -> title.sanitaze()
             }
+
+    private fun String.sanitaze() = replace("&", "&amp;")
 
     private fun List<String>.getResponse() =
             when {
