@@ -10,12 +10,12 @@ class DirectiveServiceHandler(
         private val input: HandlerInput
 ) {
 
-    fun onRequestingUpcomings() {
-        enqueueMessage("voy a consultar los estrenos para esa fecha.")
+    fun onRequestingUpcomings(language: String) {
+        enqueueMessage(Translations.getMessage(language, Translations.TranslationKey.REQUESTING_UPCOMINGS))
     }
 
-    fun onRequestingNowPlayingMovies() {
-        enqueueMessage("voy a consultar la cartelera actual.")
+    fun onRequestingNowPlayingMovies(language: String) {
+        enqueueMessage(Translations.getMessage(language, Translations.TranslationKey.REQUESTING_NOW_PLAYING_MOVIES))
     }
 
     private fun enqueueMessage(message: String) {

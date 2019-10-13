@@ -1,6 +1,7 @@
 package com.kinisoftware.upcomingMovies.api
 
 import com.google.gson.Gson
+import com.kinisoftware.upcomingMovies.Utils
 import com.kinisoftware.upcomingMovies.model.Movie
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,7 +20,7 @@ class TheMovieDBService(private val gson: Gson) {
                 System.getenv("TheMovieDBApiKey"),
                 locale,
                 1,
-                getRegion(locale)
+                Utils.getRegion(locale)
         )
 
         return upcomings.execute().body().results
@@ -37,11 +38,9 @@ class TheMovieDBService(private val gson: Gson) {
                 System.getenv("TheMovieDBApiKey"),
                 locale,
                 1,
-                getRegion(locale)
+                Utils.getRegion(locale)
         )
 
         return upcomings.execute().body().results
     }
-
-    private fun getRegion(locale: String) = locale.substringAfter('-')
 }

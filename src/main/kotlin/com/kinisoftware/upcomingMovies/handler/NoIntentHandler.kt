@@ -4,6 +4,8 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput
 import com.amazon.ask.dispatcher.request.handler.RequestHandler
 import com.amazon.ask.model.Response
 import com.amazon.ask.request.Predicates
+import com.kinisoftware.upcomingMovies.Translations
+import com.kinisoftware.upcomingMovies.getLanguage
 import java.util.Optional
 
 class NoIntentHandler() : RequestHandler {
@@ -14,7 +16,7 @@ class NoIntentHandler() : RequestHandler {
 
     override fun handle(input: HandlerInput): Optional<Response> {
         return input.responseBuilder
-                .withSpeech("Vale. ¡Gracias por usar Estrenos de cine!")
+                .withSpeech(Translations.getMessage(input.getLanguage(), Translations.TranslationKey.THANKS))
                 .withShouldEndSession(true)
                 .build()
     }

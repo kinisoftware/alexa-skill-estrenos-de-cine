@@ -14,11 +14,11 @@ class MoviesGetter(gson: Gson) {
     fun getUpcomings(locale: String, releaseDate: String) = theMovieDBService.getUpcomings(locale)
             .filter { it.isReleasedOnDate(releaseDate) }
             .map { it.getTitle() }
-            .getResponse()
+            .getResponse(Utils.getLanguage(locale))
 
     fun getNowPlayingMovies(locale: String) = theMovieDBService.getNowPlayingMovies(locale)
             .map { it.getTitle() }
-            .getResponse()
+            .getResponse(Utils.getLanguage(locale))
 
     private fun Movie.getTitle() =
             when {
@@ -38,9 +38,9 @@ class MoviesGetter(gson: Gson) {
 
     private fun String.sanitaze() = replace("&", "&amp;")
 
-    private fun List<String>.getResponse() =
+    private fun List<String>.getResponse(language: String) =
             when {
-                isNotEmpty() -> take(size - 1).joinToString(", ").plus(" y ${last()}.")
+                isNotEmpty() -> take(size - 1).joinToString(", ").plus(" ${Translations.getMessage(language, Translations.TranslationKey.AND)} ${last()}.")
                 else -> ""
             }
 

@@ -7,6 +7,8 @@ import com.amazon.ask.model.Response
 import com.amazon.ask.request.Predicates
 import com.kinisoftware.upcomingMovies.DirectiveServiceHandler
 import com.kinisoftware.upcomingMovies.MoviesGetter
+import com.kinisoftware.upcomingMovies.Translations
+import com.kinisoftware.upcomingMovies.getLanguage
 import java.util.Optional
 
 class YesIntentHandler(private val moviesGetter: MoviesGetter) : RequestHandler {
@@ -16,14 +18,14 @@ class YesIntentHandler(private val moviesGetter: MoviesGetter) : RequestHandler 
     }
 
     override fun handle(input: HandlerInput): Optional<Response> {
-        DirectiveServiceHandler(input).onRequestingNowPlayingMovies()
+        DirectiveServiceHandler(input).onRequestingNowPlayingMovies(input.getLanguage())
         val request = input.requestEnvelope.request
         val intentRequest = request as IntentRequest
         val movies = moviesGetter.getNowPlayingMovies(intentRequest.locale)
         val text = if (movies.isBlank()) {
-            "Lo siento, no he podido consultar la cartelera actual."
+            Translations.getMessage(input.getLanguage(), Translations.TranslationKey.ERROR_ASKING_NOW_PLAYING)
         } else {
-            "Las películas en cartelera son: $movies"
+            "${Translations.getMessage(input.getLanguage(), Translations.TranslationKey.NOW_PLAYING_RESPONSE)}: $movies"
         }
         return input.responseBuilder
                 .withSpeech(text)

@@ -7,6 +7,8 @@ import com.amazon.ask.model.Response
 import com.amazon.ask.request.Predicates
 import com.kinisoftware.upcomingMovies.DirectiveServiceHandler
 import com.kinisoftware.upcomingMovies.MoviesGetter
+import com.kinisoftware.upcomingMovies.Translations
+import com.kinisoftware.upcomingMovies.getLanguage
 import java.util.Optional
 
 
@@ -24,18 +26,18 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
         val releasesDate = slots["releasesDate"]!!
         val dateValue = releasesDate.value
 
-        DirectiveServiceHandler(input).onRequestingUpcomings()
+        DirectiveServiceHandler(input).onRequestingUpcomings(input.getLanguage())
         val movies = moviesGetter.getUpcomings(intentRequest.locale, dateValue)
 
         return if (movies.isBlank()) {
-            val text = "Lo siento, no tengo estrenos para esa fecha."
-            val reprompt = " ¿Te gustaría conocer la cartelera actual?"
+            val text = Translations.getMessage(input.getLanguage(), Translations.TranslationKey.UPCOMINGS_NOT_FOUND)
+            val reprompt = Translations.getMessage(input.getLanguage(), Translations.TranslationKey.ASKING_FOR_NOW_PLAYING)
             input.responseBuilder
                     .withSpeech(text + reprompt)
                     .withReprompt(reprompt)
                     .build()
         } else {
-            val text = "Las películas que se estrenan son: $movies"
+            val text = "${Translations.getMessage(input.getLanguage(), Translations.TranslationKey.UPCOMINGS_RESPONSE)}: $movies"
             input.responseBuilder
                     .withSpeech(text)
                     .withShouldEndSession(true)

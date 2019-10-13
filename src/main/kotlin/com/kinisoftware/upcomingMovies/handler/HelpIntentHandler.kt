@@ -4,6 +4,8 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput
 import com.amazon.ask.dispatcher.request.handler.RequestHandler
 import com.amazon.ask.model.Response
 import com.amazon.ask.request.Predicates.intentName
+import com.kinisoftware.upcomingMovies.Translations
+import com.kinisoftware.upcomingMovies.getLanguage
 import java.util.Optional
 
 class HelpIntentHandler : RequestHandler {
@@ -13,7 +15,7 @@ class HelpIntentHandler : RequestHandler {
     }
 
     override fun handle(input: HandlerInput): Optional<Response> {
-        val text = "Pregúntame por los estrenos de cine de esta semana, de la próxima semana o de este mes"
+        val text = Translations.getMessage(input.getLanguage(), Translations.TranslationKey.HELP)
         return input.responseBuilder
                 .withSpeech(text)
                 .withReprompt(text)
