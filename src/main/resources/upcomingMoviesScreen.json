@@ -1,0 +1,189 @@
+{
+  "type": "APL",
+  "version": "1.1",
+  "settings": {},
+  "theme": "dark",
+  "import": [
+    {
+      "name": "alexa-layouts",
+      "version": "1.0.0"
+    },
+    {
+      "name": "alexa-styles",
+      "version": "1.0.0"
+    }
+  ],
+  "resources": [
+    {
+      "description": "Stock color for the dark theme",
+      "colors": {
+        "colorTextPrimary": "#f0f1ef"
+      }
+    },
+    {
+      "description": "Standard font sizes",
+      "dimensions": {
+        "textSizeDetails": 20
+      }
+    }
+  ],
+  "styles": {
+    "textStyleBase": {
+      "description": "Base font description; set color",
+      "values": [
+        {
+          "color": "@colorTextPrimary"
+        }
+      ]
+    },
+    "textStyleBase2": {
+      "description": "Regular version of basic font",
+      "extend": "textStyleBase",
+      "values": {
+        "fontWeight": "500"
+      }
+    },
+    "mixinDetails": {
+      "values": {
+        "fontSize": "@textSizeDetails"
+      }
+    },
+    "textStyleDetails": {
+      "extend": [
+        "textStyleBase2",
+        "mixinDetails"
+      ]
+    }
+  },
+  "onMount": [],
+  "graphics": {},
+  "commands": {},
+  "layouts": {
+    "ListTemplate1": {
+      "parameters": [
+        "backgroundImage",
+        "title",
+        "logo",
+        "hintText",
+        "listData"
+      ],
+      "item": [
+        {
+          "type": "Container",
+          "width": "100vw",
+          "height": "100vh",
+          "direction": "column",
+          "items": [
+            {
+              "type": "Image",
+              "source": "${backgroundImage}",
+              "scale": "best-fill",
+              "width": "100vw",
+              "height": "100vh",
+              "position": "absolute"
+            },
+            {
+              "type": "AlexaHeader",
+              "headerTitle": "${title}",
+              "headerAttributionImage": "${logo}"
+            },
+            {
+              "type": "Sequence",
+              "grow": 1,
+              "height": "80vh",
+              "scrollDirection": "vertical",
+              "paddingLeft": "@marginLeft",
+              "paddingRight": "@marginRight",
+              "data": "${listData}",
+              "numbered": true,
+              "items": [
+                {
+                  "type": "VerticalListItem",
+                  "title": "${data.title}",
+                  "releaseDate": "${data.releaseDate}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "VerticalListItem": {
+      "parameters": [
+        "title",
+        "releaseDate"
+      ],
+      "item": [
+        {
+          "when": "${viewport.shape == 'round'}",
+          "type": "Container",
+          "direction": "row",
+          "height": 100,
+          "width": 400,
+          "alignItems": "center",
+          "items": [
+            {
+              "type": "Container",
+              "direction": "column",
+              "spacing": 25,
+              "items": [
+                {
+                  "type": "Text",
+                  "style": "textStyleDetails",
+                  "text": "${title}"
+                },
+                {
+                  "type": "Text",
+                  "text": "${releaseDate}",
+                  "style": "textStyleDetails",
+                  "fontWeight": "300"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "direction": "row",
+          "height": 125,
+          "width": 800,
+          "alignItems": "center",
+          "items": [
+            {
+              "type": "Container",
+              "spacing": 30,
+              "direction": "column",
+              "items": [
+                {
+                  "type": "Text",
+                  "text": "${title}",
+                  "style": "textStyleDisplay5"
+                },
+                {
+                  "type": "Text",
+                  "text": "${releaseDate}",
+                  "style": "textStyleDetails",
+                  "fontWeight": "300"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "mainTemplate": {
+    "parameters": [
+      "payload"
+    ],
+    "item": [
+      {
+        "backgroundImage": "${payload.templateMetadata.backgroundImage.sources[0].url}",
+        "title": "${payload.templateMetadata.title}",
+        "logo": "${payload.templateMetadata.logoUrl}",
+        "listData": "${payload.movies.newReleases}",
+        "type": "ListTemplate1"
+      }
+    ]
+  }
+}

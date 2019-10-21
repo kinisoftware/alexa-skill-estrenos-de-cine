@@ -2,11 +2,19 @@ package com.kinisoftware.upcomingMovies.handler
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput
 import com.amazon.ask.dispatcher.request.handler.RequestHandler
+import com.amazon.ask.exception.AskSdkException
 import com.amazon.ask.model.LaunchRequest
 import com.amazon.ask.model.Response
+import com.amazon.ask.model.interfaces.alexa.presentation.apl.RenderDocumentDirective
 import com.amazon.ask.request.Predicates
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.kinisoftware.upcomingMovies.Translations
+import com.kinisoftware.upcomingMovies.Utils
 import com.kinisoftware.upcomingMovies.getLanguage
+import java.io.File
+import java.io.IOException
+import java.util.HashMap
 import java.util.Optional
 
 class LaunchRequestHandler : RequestHandler {
@@ -16,11 +24,35 @@ class LaunchRequestHandler : RequestHandler {
     }
 
     override fun handle(input: HandlerInput): Optional<Response> {
-        val repromptText = Translations.getMessage(input.getLanguage(), Translations.TranslationKey.HELP)
         val text = Translations.getMessage(input.getLanguage(), Translations.TranslationKey.WELCOME)
-        return input.responseBuilder
-                .withSpeech(text)
-                .withReprompt(repromptText)
-                .build()
+        return when {
+            Utils.supportAPL(input) -> {
+                try {
+                    val mapper = ObjectMapper()
+                    val documentMapType = object : TypeReference<HashMap<String, Any>>() {}
+                    val document = mapper.readValue<Map<String, Any>>(File("upcomingMoviesScreen.json"), documentMapType)
+                    val dataSourceMapType = object : TypeReference<HashMap<String, Any>>() {}
+                    val dataSource = mapper.readValue<Map<String, Any>>(File("upcomingMoviesScreenData.json"), dataSourceMapType)
+                    val documentDirective = RenderDocumentDirective.builder()
+                            .withDocument(document)
+                            .withDatasources(dataSource)
+                            .build()
+
+                    return input.responseBuilder
+                            .withSpeech(text)
+                            .addDirective(documentDirective)
+                            .build()
+                } catch (e: IOException) {
+                    throw AskSdkException("Unable to read or deserialize upcoming movies data", e)
+                }
+            }
+            else -> {
+                val repromptText = Translations.getMessage(input.getLanguage(), Translations.TranslationKey.HELP)
+                input.responseBuilder
+                        .withSpeech(text)
+                        .withReprompt(repromptText)
+                        .build()
+            }
+        }
     }
 }

@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-	compile 'com.amazon.alexa:ask-sdk:2.7.2'
+	compile 'com.amazon.alexa:ask-sdk:2.22.0'
 	implementation 'com.squareup.retrofit2:retrofit:2.1.0'
 	implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

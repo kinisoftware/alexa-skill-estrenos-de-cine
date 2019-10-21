@@ -1,0 +1,27 @@
+{
+  "templateMetadata": {
+    "type": "object",
+    "objectId": "lt1Metadata",
+    "backgroundImage": {
+      "contentDescription": null,
+      "smallSourceUrl": null,
+      "largeSourceUrl": null,
+      "sources": [
+        {
+          "url": "https://upcoming-movies.s3-eu-west-1.amazonaws.com/felix-mooneeram-evlkOfkQ5rE-unsplash.jpg",
+          "size": "small",
+          "widthPixels": 0,
+          "heightPixels": 0
+        },
+        {
+          "url": "https://upcoming-movies.s3-eu-west-1.amazonaws.com/felix-mooneeram-evlkOfkQ5rE-unsplash.jpg",
+          "size": "large",
+          "widthPixels": 0,
+          "heightPixels": 0
+        }
+      ]
+    },
+    "title": "Estrenos de Cine",
+    "logoUrl": "https://images-na.ssl-images-amazon.com/images/I/519R8Z0YttL.png"
+  }
+}
