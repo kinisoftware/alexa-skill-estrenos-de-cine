@@ -64,6 +64,7 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
                     return input.responseBuilder
                             .withSpeech(text)
                             .addDirective(documentDirective)
+                            .withShouldEndSession(false)
                             .build()
                 } catch (e: IOException) {
                     throw AskSdkException("Unable to read or deserialize upcoming movies data", e)
@@ -76,7 +77,10 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
                 } else {
                     "${Translations.getMessage(language, Translations.TranslationKey.UPCOMINGS_RESPONSE)}: " + movies.map { it.getTitle() }.getResponse(language)
                 }
-                input.responseBuilder.withSpeech(text).build()
+                input.responseBuilder
+                        .withSpeech(text)
+                        .withShouldEndSession(false)
+                        .build()
             }
         }
     }

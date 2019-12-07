@@ -70,16 +70,17 @@
       "item": [
         {
           "type": "Container",
-          "width": "100vw",
-          "height": "100vh",
-          "direction": "column",
+          "width": "100%",
+          "height": "100%",
+          "alignItems": "center",
+          "justifyContent": "center",
           "items": [
             {
               "type": "Image",
               "source": "${backgroundImage}",
               "scale": "best-fill",
-              "width": "100vw",
-              "height": "100vh",
+              "width": "100%",
+              "height": "100%",
               "position": "absolute"
             },
             {
@@ -116,16 +117,15 @@
       "item": [
         {
           "when": "${viewport.shape == 'round'}",
-          "type": "Container",
-          "direction": "row",
-          "height": 100,
-          "width": 400,
-          "alignItems": "center",
+          "type": "Frame",
+          "height": "auto",
+          "width": "auto",
           "items": [
             {
               "type": "Container",
-              "direction": "column",
-              "spacing": 25,
+              "width": "80vw",
+              "height": "20vh",
+              "alignItems": "center",
               "items": [
                 {
                   "type": "Text",
@@ -143,16 +143,15 @@
           ]
         },
         {
-          "type": "Container",
-          "direction": "row",
-          "height": 125,
-          "width": 800,
-          "alignItems": "center",
+          "type": "Frame",
+          "height": "auto",
+          "width": "auto",
           "items": [
             {
               "type": "Container",
-              "spacing": 30,
-              "direction": "column",
+              "width": "80vw",
+              "height": "30vh",
+              "alignItems": "center",
               "items": [
                 {
                   "type": "Text",

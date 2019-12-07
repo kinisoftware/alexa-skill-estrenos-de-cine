@@ -41,6 +41,7 @@ class LaunchRequestHandler : RequestHandler {
                     return input.responseBuilder
                             .withSpeech(text)
                             .addDirective(documentDirective)
+                            .withShouldEndSession(false)
                             .build()
                 } catch (e: IOException) {
                     throw AskSdkException("Unable to read or deserialize upcoming movies data", e)
