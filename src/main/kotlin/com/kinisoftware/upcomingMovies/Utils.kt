@@ -9,8 +9,9 @@ import com.kinisoftware.upcomingMovies.model.Movie
 object Utils {
     fun getLanguage(locale: String) = locale.substringBefore('-')
     fun getRegion(locale: String) = locale.substringAfter('-')
-    fun supportAPL(handlerInput: HandlerInput) = handlerInput.requestEnvelope.context.system.device.supportedInterfaces.alexaPresentationAPL != null
 }
+
+fun HandlerInput.supportAPL() = requestEnvelope.context.system.device.supportedInterfaces.alexaPresentationAPL != null
 
 fun List<String>.getResponse(language: String) =
         when {

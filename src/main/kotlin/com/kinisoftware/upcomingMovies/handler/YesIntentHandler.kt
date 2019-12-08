@@ -11,9 +11,9 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.kinisoftware.upcomingMovies.MoviesGetter
 import com.kinisoftware.upcomingMovies.Translations
-import com.kinisoftware.upcomingMovies.Utils
 import com.kinisoftware.upcomingMovies.getLanguage
 import com.kinisoftware.upcomingMovies.getResponse
+import com.kinisoftware.upcomingMovies.supportAPL
 import java.io.File
 import java.io.IOException
 import java.util.HashMap
@@ -40,7 +40,7 @@ class YesIntentHandler(private val moviesGetter: MoviesGetter) : RequestHandler 
                         .withShouldEndSession(true)
                         .build()
             }
-            Utils.supportAPL(input) -> {
+            input.supportAPL() -> {
                 val text = "Te muestro la cartelera actual"
                 try {
                     val mapper = ObjectMapper()

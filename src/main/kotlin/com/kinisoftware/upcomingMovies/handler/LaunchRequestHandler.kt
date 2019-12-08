@@ -10,8 +10,8 @@ import com.amazon.ask.request.Predicates
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.kinisoftware.upcomingMovies.Translations
-import com.kinisoftware.upcomingMovies.Utils
 import com.kinisoftware.upcomingMovies.getLanguage
+import com.kinisoftware.upcomingMovies.supportAPL
 import java.io.File
 import java.io.IOException
 import java.util.HashMap
@@ -26,7 +26,7 @@ class LaunchRequestHandler : RequestHandler {
     override fun handle(input: HandlerInput): Optional<Response> {
         val text = Translations.getMessage(input.getLanguage(), Translations.TranslationKey.WELCOME)
         return when {
-            Utils.supportAPL(input) -> {
+            input.supportAPL() -> {
                 try {
                     val mapper = ObjectMapper()
                     val documentMapType = object : TypeReference<HashMap<String, Any>>() {}

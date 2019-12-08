@@ -11,10 +11,10 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.kinisoftware.upcomingMovies.MoviesGetter
 import com.kinisoftware.upcomingMovies.Translations
-import com.kinisoftware.upcomingMovies.Utils
 import com.kinisoftware.upcomingMovies.getLanguage
 import com.kinisoftware.upcomingMovies.getResponse
 import com.kinisoftware.upcomingMovies.getTitle
+import com.kinisoftware.upcomingMovies.supportAPL
 import java.io.File
 import java.io.IOException
 import java.util.HashMap
@@ -39,20 +39,13 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
         val movies = moviesGetter.getUpcomings(locale, dateValue)
 
         return when {
-            Utils.supportAPL(input) -> {
+            input.supportAPL() && movies.isNotEmpty() -> {
                 try {
                     val mapper = ObjectMapper()
                     val documentMapType = object : TypeReference<HashMap<String, Any>>() {}
                     val document = mapper.readValue<Map<String, Any>>(File("upcomingMoviesScreen.json"), documentMapType)
                     val dataSourceMapType = object : TypeReference<HashMap<String, Any>>() {}
                     val dataSource = mapper.readValue<Map<String, Any>>(File("upcomingMoviesScreenData.json"), dataSourceMapType)
-
-                    val text = if (movies.isEmpty()) {
-                        Translations.getMessage(language, Translations.TranslationKey.UPCOMINGS_NOT_FOUND) +
-                                Translations.getMessage(language, Translations.TranslationKey.ASKING_FOR_NOW_PLAYING)
-                    } else {
-                        "Te muestro los próximos estrenos de cine"
-                    }
 
                     val newReleases = mapOf("newReleases" to movies)
                     val documentDirective = RenderDocumentDirective.builder()
@@ -62,7 +55,7 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
                             .build()
 
                     return input.responseBuilder
-                            .withSpeech(text)
+                            .withSpeech("Te muestro los próximos estrenos de cine")
                             .addDirective(documentDirective)
                             .withShouldEndSession(false)
                             .build()

@@ -1,8 +1,6 @@
 {
   "type": "APL",
   "version": "1.1",
-  "settings": {},
-  "theme": "dark",
   "import": [
     {
       "name": "alexa-layouts",
@@ -55,17 +53,13 @@
       ]
     }
   },
-  "onMount": [],
-  "graphics": {},
-  "commands": {},
   "layouts": {
-    "ListTemplate1": {
+    "mainLayout": {
       "parameters": [
         "backgroundImage",
         "title",
         "logo",
-        "hintText",
-        "listData"
+        "movies"
       ],
       "item": [
         {
@@ -95,11 +89,11 @@
               "scrollDirection": "vertical",
               "paddingLeft": "@marginLeft",
               "paddingRight": "@marginRight",
-              "data": "${listData}",
+              "data": "${movies}",
               "numbered": true,
               "items": [
                 {
-                  "type": "VerticalListItem",
+                  "type": "moviesListLayout",
                   "title": "${data.title}",
                   "releaseDate": "${data.releaseDate}"
                 }
@@ -109,7 +103,7 @@
         }
       ]
     },
-    "VerticalListItem": {
+    "moviesListLayout": {
       "parameters": [
         "title",
         "releaseDate"
@@ -177,11 +171,11 @@
     ],
     "item": [
       {
-        "backgroundImage": "${payload.templateMetadata.backgroundImage.sources[0].url}",
+        "backgroundImage": "${payload.templateMetadata.backgroundUrl}",
         "title": "${payload.templateMetadata.title}",
         "logo": "${payload.templateMetadata.logoUrl}",
-        "listData": "${payload.movies.newReleases}",
-        "type": "ListTemplate1"
+        "movies": "${payload.movies.newReleases}",
+        "type": "mainLayout"
       }
     ]
   }
