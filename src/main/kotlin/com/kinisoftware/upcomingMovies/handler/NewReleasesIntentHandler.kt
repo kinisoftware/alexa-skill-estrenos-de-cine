@@ -57,22 +57,27 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
                     return input.responseBuilder
                             .withSpeech("Te muestro los próximos estrenos de cine")
                             .addDirective(documentDirective)
-                            .withShouldEndSession(false)
+                            .withShouldEndSession(true)
                             .build()
                 } catch (e: IOException) {
                     throw AskSdkException("Unable to read or deserialize upcoming movies data", e)
                 }
             }
             else -> {
-                val text = if (movies.isEmpty()) {
-                    Translations.getMessage(language, Translations.TranslationKey.UPCOMINGS_NOT_FOUND) + Translations
-                            .getMessage(language, Translations.TranslationKey.ASKING_FOR_NOW_PLAYING)
+                var shouldEndSession: Boolean
+                var text: String
+                if (movies.isEmpty()) {
+                    text = Translations.getMessage(language, Translations.TranslationKey.UPCOMINGS_NOT_FOUND) +
+                            Translations.getMessage(language, Translations.TranslationKey.ASKING_FOR_NOW_PLAYING)
+                    shouldEndSession = false
                 } else {
-                    "${Translations.getMessage(language, Translations.TranslationKey.UPCOMINGS_RESPONSE)}: " + movies.map { it.getTitle() }.getResponse(language)
+                    text = "${Translations.getMessage(language, Translations.TranslationKey.UPCOMINGS_RESPONSE)}: " +
+                            movies.map { it.getTitle() }.getResponse(language)
+                    shouldEndSession = true
                 }
                 input.responseBuilder
                         .withSpeech(text)
-                        .withShouldEndSession(false)
+                        .withShouldEndSession(shouldEndSession)
                         .build()
             }
         }

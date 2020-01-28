@@ -6,7 +6,8 @@ object Translations {
 
     enum class TranslationKey {
         WELCOME, HELP, THANKS, UPCOMINGS_NOT_FOUND, ASKING_FOR_NOW_PLAYING, UPCOMINGS_RESPONSE,
-        ERROR_ASKING_NOW_PLAYING, NOW_PLAYING_RESPONSE, REQUESTING_UPCOMINGS, REQUESTING_NOW_PLAYING_MOVIES, AND
+        ERROR_ASKING_NOW_PLAYING, NOW_PLAYING_RESPONSE, REQUESTING_UPCOMINGS, REQUESTING_NOW_PLAYING_MOVIES, AND,
+        FALLBACK
     }
 
     fun getMessage(language: String, messageKey: TranslationKey) =
@@ -25,7 +26,9 @@ object Translations {
                     TranslationKey.NOW_PLAYING_RESPONSE to "Las películas en cartelera son",
                     TranslationKey.REQUESTING_UPCOMINGS to "voy a consultar los estrenos para esa fecha.",
                     TranslationKey.REQUESTING_NOW_PLAYING_MOVIES to "voy a consultar la cartelera actual.",
-                    TranslationKey.AND to "y"
+                    TranslationKey.AND to "y",
+                    TranslationKey.FALLBACK to "Lo siento, no puedo ayudarte con eso pero me puedes preguntar por los" +
+                            " estrenos de cine de esta semana, de la próxima semana o de este mes."
             ),
             "en" to mapOf(
                     TranslationKey.WELCOME to "Welcome to Upcoming Movies! tu-.",

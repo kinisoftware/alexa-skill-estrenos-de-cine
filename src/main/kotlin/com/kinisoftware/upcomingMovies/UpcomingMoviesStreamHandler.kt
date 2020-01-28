@@ -5,6 +5,7 @@ import com.amazon.ask.Skills
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.kinisoftware.upcomingMovies.handler.CancelAndStopIntentHandler
+import com.kinisoftware.upcomingMovies.handler.FallbackIntentHandler
 import com.kinisoftware.upcomingMovies.handler.HelpIntentHandler
 import com.kinisoftware.upcomingMovies.handler.LaunchRequestHandler
 import com.kinisoftware.upcomingMovies.handler.NewReleasesIntentHandler
@@ -32,6 +33,7 @@ class UpcomingMoviesStreamHandler : SkillStreamHandler(skill) {
                         NewReleasesIntentHandler(moviesGetter),
                         YesIntentHandler(moviesGetter),
                         NoIntentHandler(),
+                        FallbackIntentHandler(),
                         SessionEndedRequestHandler()
                 ).build()
     }

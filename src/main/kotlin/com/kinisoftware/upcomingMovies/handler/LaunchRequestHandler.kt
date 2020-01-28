@@ -25,6 +25,7 @@ class LaunchRequestHandler : RequestHandler {
 
     override fun handle(input: HandlerInput): Optional<Response> {
         val text = Translations.getMessage(input.getLanguage(), Translations.TranslationKey.WELCOME)
+        val repromptText = Translations.getMessage(input.getLanguage(), Translations.TranslationKey.HELP)
         return when {
             input.supportAPL() -> {
                 try {
@@ -41,14 +42,13 @@ class LaunchRequestHandler : RequestHandler {
                     return input.responseBuilder
                             .withSpeech(text)
                             .addDirective(documentDirective)
-                            .withShouldEndSession(false)
+                            .withReprompt(repromptText)
                             .build()
                 } catch (e: IOException) {
                     throw AskSdkException("Unable to read or deserialize upcoming movies data", e)
                 }
             }
             else -> {
-                val repromptText = Translations.getMessage(input.getLanguage(), Translations.TranslationKey.HELP)
                 input.responseBuilder
                         .withSpeech(text)
                         .withReprompt(repromptText)

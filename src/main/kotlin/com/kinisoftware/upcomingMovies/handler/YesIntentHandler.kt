@@ -59,6 +59,7 @@ class YesIntentHandler(private val moviesGetter: MoviesGetter) : RequestHandler 
                     return input.responseBuilder
                             .withSpeech(text)
                             .addDirective(documentDirective)
+                            .withShouldEndSession(true)
                             .build()
                 } catch (e: IOException) {
                     throw AskSdkException("Unable to read or deserialize upcoming movies data", e)
