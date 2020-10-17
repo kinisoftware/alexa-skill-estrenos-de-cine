@@ -49,6 +49,7 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
 
                     val newReleases = mapOf("newReleases" to movies)
                     val documentDirective = RenderDocumentDirective.builder()
+                            .withToken("newReleasesSkillAPLToken")
                             .withDocument(document)
                             .withDatasources(dataSource)
                             .putDatasourcesItem("movies", newReleases)
@@ -57,7 +58,6 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
                     return input.responseBuilder
                             .withSpeech("Te muestro los próximos estrenos de cine")
                             .addDirective(documentDirective)
-                            .withShouldEndSession(true)
                             .build()
                 } catch (e: IOException) {
                     throw AskSdkException("Unable to read or deserialize upcoming movies data", e)

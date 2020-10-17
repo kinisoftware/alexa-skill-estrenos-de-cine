@@ -9,6 +9,7 @@ import com.kinisoftware.upcomingMovies.handler.FallbackIntentHandler
 import com.kinisoftware.upcomingMovies.handler.HelpIntentHandler
 import com.kinisoftware.upcomingMovies.handler.LaunchRequestHandler
 import com.kinisoftware.upcomingMovies.handler.NewReleasesIntentHandler
+import com.kinisoftware.upcomingMovies.handler.NextPageIntentHandler
 import com.kinisoftware.upcomingMovies.handler.NoIntentHandler
 import com.kinisoftware.upcomingMovies.handler.SessionEndedRequestHandler
 import com.kinisoftware.upcomingMovies.handler.YesIntentHandler
@@ -33,6 +34,7 @@ class UpcomingMoviesStreamHandler : SkillStreamHandler(skill) {
                         NewReleasesIntentHandler(moviesGetter),
                         YesIntentHandler(moviesGetter),
                         NoIntentHandler(),
+                        NextPageIntentHandler(),
                         FallbackIntentHandler(),
                         SessionEndedRequestHandler()
                 ).build()

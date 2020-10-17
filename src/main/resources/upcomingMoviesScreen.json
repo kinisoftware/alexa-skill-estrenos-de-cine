@@ -1,10 +1,10 @@
 {
   "type": "APL",
-  "version": "1.1",
+  "version": "1.4",
   "import": [
     {
       "name": "alexa-layouts",
-      "version": "1.0.0"
+      "version": "1.2.0"
     },
     {
       "name": "alexa-styles",
@@ -38,7 +38,7 @@
       "description": "Regular version of basic font",
       "extend": "textStyleBase",
       "values": {
-        "fontWeight": "500"
+        "fontWeight": "200"
       }
     },
     "mixinDetails": {
@@ -59,7 +59,8 @@
         "backgroundImage",
         "title",
         "logo",
-        "movies"
+        "movies",
+        "hintText"
       ],
       "item": [
         {
@@ -83,21 +84,24 @@
               "headerAttributionImage": "${logo}"
             },
             {
-              "type": "Sequence",
-              "grow": 1,
-              "height": "80vh",
-              "scrollDirection": "vertical",
-              "paddingLeft": "@marginLeft",
-              "paddingRight": "@marginRight",
-              "data": "${movies}",
-              "numbered": true,
-              "items": [
+              "type": "Pager",
+              "id": "moviesPager",
+              "width": "100vw",
+              "height": "70vh",
+              "item": [
                 {
                   "type": "moviesListLayout",
                   "title": "${data.title}",
-                  "releaseDate": "${data.releaseDate}"
+                  "releaseDate": "${data.releaseDate}",
+                  "image": "${data.image}"
                 }
-              ]
+              ],
+              "data": "${movies}"
+            },
+            {
+              "type": "AlexaFooter",
+              "hintText": "${hintText}",
+              "when": "${viewport.shape != 'round'}"
             }
           ]
         }
@@ -106,25 +110,34 @@
     "moviesListLayout": {
       "parameters": [
         "title",
-        "releaseDate"
+        "releaseDate",
+        "image"
       ],
       "item": [
         {
           "when": "${viewport.shape == 'round'}",
           "type": "Frame",
-          "height": "auto",
           "width": "auto",
+          "height": "auto",
           "items": [
             {
               "type": "Container",
-              "width": "80vw",
-              "height": "20vh",
+              "width": "100vw",
+              "height": "100vh",
               "alignItems": "center",
               "items": [
                 {
+                  "type": "AlexaImage",
+                  "imageWidth": "50vw",
+                  "imageHeight": "40vh",
+                  "align": "center",
+                  "imageSource": "${image}"
+                },
+                {
                   "type": "Text",
                   "style": "textStyleDetails",
-                  "text": "${title}"
+                  "text": "${title}",
+                  "fontWeight": "bold"
                 },
                 {
                   "type": "Text",
@@ -132,7 +145,8 @@
                   "style": "textStyleDetails",
                   "fontWeight": "300"
                 }
-              ]
+              ],
+              "justifyContent": "start"
             }
           ]
         },
@@ -143,22 +157,41 @@
           "items": [
             {
               "type": "Container",
-              "width": "80vw",
-              "height": "30vh",
-              "alignItems": "center",
+              "width": "100vw",
+              "height": "70vh",
+              "alignItems": "stretch",
               "items": [
                 {
-                  "type": "Text",
-                  "text": "${title}",
-                  "style": "textStyleDisplay5"
+                  "type": "AlexaImage",
+                  "imageWidth": "50vw",
+                  "imageHeight": "70vh",
+                  "imageSource": "${image}"
                 },
                 {
-                  "type": "Text",
-                  "text": "${releaseDate}",
-                  "style": "textStyleDetails",
-                  "fontWeight": "300"
+                  "type": "Container",
+                  "width": "50vw",
+                  "height": "70vh",
+                  "item": [
+                    {
+                      "type": "Text",
+                      "style": "textStyleDisplay5",
+                      "text": "${title}",
+                      "fontStyle": "normal",
+                      "fontSize": "40dp",
+                      "fontWeight": "bold"
+                    },
+                    {
+                      "type": "Text",
+                      "text": "${releaseDate}",
+                      "style": "textStyleDetails",
+                      "fontWeight": "300"
+                    }
+                  ],
+                  "alignItems": "center",
+                  "justifyContent": "center"
                 }
-              ]
+              ],
+              "direction": "row"
             }
           ]
         }
@@ -175,6 +208,7 @@
         "title": "${payload.templateMetadata.title}",
         "logo": "${payload.templateMetadata.logoUrl}",
         "movies": "${payload.movies.newReleases}",
+        "hintText": "${payload.footerData.properties.hintText}",
         "type": "mainLayout"
       }
     ]
