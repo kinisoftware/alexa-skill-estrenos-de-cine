@@ -3,5 +3,18 @@
     "backgroundUrl": "https://upcoming-movies.s3-eu-west-1.amazonaws.com/felix-mooneeram-evlkOfkQ5rE-unsplash.jpg",
     "title": "Estrenos de Cine",
     "logoUrl": "https://images-na.ssl-images-amazon.com/images/I/519R8Z0YttL.png"
+  },
+  "footerData": {
+    "type": "object",
+    "objectId": "footerData",
+    "properties": {
+      "hintText": "siguiente estreno"
+    },
+    "transformers": [
+      {
+        "inputPath": "hintText",
+        "transformer": "textToHint"
+      }
+    ]
   }
 }

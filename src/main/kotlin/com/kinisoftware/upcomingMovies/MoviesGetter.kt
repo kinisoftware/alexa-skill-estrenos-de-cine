@@ -11,11 +11,37 @@ class MoviesGetter(gson: Gson) {
 
     private val theMovieDBService = TheMovieDBService(gson)
 
-    fun getUpcomings(locale: String, releaseDate: String) = theMovieDBService.getUpcomings(locale)
-            .filter { it.isReleasedOnDate(releaseDate) }
-            .sortedBy { it.releaseDate }
+    fun getUpcomings(locale: String, releaseDate: String): List<Movie> {
+        val configuration = theMovieDBService.getAPIConfiguration()
 
-    fun getNowPlayingMovies(locale: String) = theMovieDBService.getNowPlayingMovies(locale)
+        val movies: MutableList<Movie> = mutableListOf()
+        theMovieDBService.getUpcomings(locale)
+                .filter { it.isReleasedOnDate(releaseDate) }
+                .forEach {
+                    if (!it.posterPath.isNullOrEmpty()) {
+                        it.addImage(configuration.images.secureBaseUrl)
+                        movies.add(it)
+                    }
+                }
+
+        return movies.sortedBy { it.releaseDate }
+    }
+
+    fun getNowPlayingMovies(locale: String): List<Movie> {
+        val configuration = theMovieDBService.getAPIConfiguration()
+
+        val movies: MutableList<Movie> = mutableListOf()
+        theMovieDBService.getNowPlayingMovies(locale).forEach {
+            it.addImage(configuration.images.secureBaseUrl)
+            movies.add(it)
+        }
+
+        return movies
+    }
+
+    private fun Movie.addImage(baseUrl: String) {
+        image = baseUrl + "w500" + posterPath
+    }
 
     private fun Movie.isReleasedOnDate(dateValue: String) =
             getWeekFormatStyle(releaseDate) == dateValue || getMonthFormatStyle(releaseDate) == dateValue

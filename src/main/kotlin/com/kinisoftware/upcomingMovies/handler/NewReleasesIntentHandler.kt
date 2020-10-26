@@ -49,6 +49,7 @@ class NewReleasesIntentHandler(private val moviesGetter: MoviesGetter) : Request
 
                     val newReleases = mapOf("newReleases" to movies)
                     val documentDirective = RenderDocumentDirective.builder()
+                            .withToken("newReleasesSkillAPLToken")
                             .withDocument(document)
                             .withDatasources(dataSource)
                             .putDatasourcesItem("movies", newReleases)
